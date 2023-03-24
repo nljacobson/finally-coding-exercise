@@ -19,11 +19,14 @@ from django.urls import include
 from rest_framework import routers
 from account import views as account_views
 from transaction import views as transaction_views
-
+from authentication import views as login_views
 router = routers.DefaultRouter()
-router.register(r'accounts', account_views.AccountView, 'account')
-router.register(r'transactions', transaction_views.TransactionView, 'transaction')
+router.register(r'accounts', account_views.AdminAccountView, 'account')
+router.register(r'transactions', transaction_views.AdminTransactionView, 'transaction')
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path('api/', include(router.urls))
+    path('login/', login_views.LoginView.as_view()),
+    path('api/', include(router.urls)),
+    path('myAccounts/', account_views.UserAccountView.get),
+    path('myTransactions/', transaction_views.UserTransactionView.get),
 ]

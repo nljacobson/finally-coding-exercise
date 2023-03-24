@@ -1,4 +1,3 @@
-import './Login.css';
 import * as React from 'react';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -7,7 +6,9 @@ import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import axios from 'axios';
+import {useNavigate} from 'react-router-dom';
+
 export default function Login() {
   return(<div>
     <Grid 
@@ -32,22 +33,34 @@ export default function Login() {
         </Box>
       </Grid>
     </Grid>
-  </div>)
+    </div>)
 }
 
 // Sign In template from MUI https://github.com/mui/material-ui/blob/v5.11.11/docs/data/material/getting-started/templates/sign-in/SignIn.js
 function SignIn() {
-    const theme = createTheme();
+    const navigate = useNavigate()
     const handleSubmit = (event) => {
       event.preventDefault();
       const data = new FormData(event.currentTarget);
-      console.log({
-        email: data.get('email'),
-        password: data.get('password'),
+      axios({
+        method: 'post',
+        url: 'http://localhost:8000/login/',
+        data: {
+          username: data.get('email'),
+          password: data.get('password')
+        }
+      })
+        .then(function(response){
+          if (response.status === 202){
+            console.log(response)
+            navigate("/main", {state: response.data})
+          }
+          else{
+            console.log(response)
+          }
       });
     }
     return (
-      <ThemeProvider theme={theme}>
         <Container component="main" maxWidth="xs">
           <CssBaseline />
           <Box
@@ -69,7 +82,6 @@ function SignIn() {
                 id="email"
                 label="Email Address/Username"
                 name="email"
-                autoFocus
               />
               <TextField
                 margin="normal"
@@ -93,6 +105,5 @@ function SignIn() {
             </Box>
           </Box>
         </Container>
-      </ThemeProvider>
     );
   }

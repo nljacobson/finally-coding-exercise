@@ -15,4 +15,4 @@ class LoginView(views.APIView):
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
         login(request, user)
-        return Response(None, status=202)
+        return Response(data=user.username, status=202)

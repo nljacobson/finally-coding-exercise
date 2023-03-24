@@ -1,1 +1,0 @@
-# finally-coding-exercise

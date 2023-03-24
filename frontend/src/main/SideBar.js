@@ -1,9 +1,10 @@
-import {Grid, Divider, ToggleButton, ToggleButtonGroup, Typography} from '@mui/material'
+import {Grid, Divider,Typography, Button} from '@mui/material'
+import React from 'react';
 export default function SideBar({username, toggle, setToggle}){
     const greeting =  'Hi, ' + username + '!';
-    const handleToggle = (event, newToggle) => {
-        setToggle(newToggle);
-      };
+    const setState = (new_state) => {
+        setToggle(new_state)
+    }
     return(
     <Grid container 
         spacing = {0}
@@ -26,41 +27,41 @@ export default function SideBar({username, toggle, setToggle}){
             </Typography>
         </Grid>
         <Divider 
+            color={"black"}
             sx= {{
                 width:'15vw',
-                minWidth:'150px'
+                minWidth:'150px',
             }}
         />
         <Grid item
             sx = {{margin:1}}>
-            <ToggleButtonGroup
-                color = 'primary'
-                orientation = 'vertical'
-                exclusive
-                value={toggle}
-                onChange={handleToggle}
+            <Button
+                variant = {toggle ? 'contained' : 'outlined'}
+                onClick = {() => setState(true)}
+                sx = {{
+                    width:'12vw',
+                    minWidth:'125px',
+                    borderColor:'black',
+                    border:'1px',
+                }}
                 >
-                <ToggleButton 
-                variant={'contained'}
-                value={'accounts'}
-                width = '15vw'
-                onClick={setToggle}
-                margin={2}
-                style={{minWidth: '13vw'}}
+                Accounts
+            </Button>
+        </Grid>
+        <Grid item
+            sx = {{margin:1}}>
+            <Button
+                variant = {toggle ? 'outlined' : 'contained'}
+                onClick = {() => setState(false)}
+                sx = {{
+                    width:'12vw',
+                    minWidth:'125px',
+                    borderColor:'black',
+                    border:'1px',
+                }}
                 >
-                    Accounts
-                </ToggleButton>
-                <ToggleButton 
-                variant={'contained'}
-                value={'transactions'}
-                width = '15vw'
-                onClick={setToggle}
-                padding={2}
-                style={{minWidth: '13vw'}}
-                >
-                    Transactions
-                </ToggleButton>
-            </ToggleButtonGroup>
+                Transactions
+            </Button>
         </Grid>
     </Grid>
     )
