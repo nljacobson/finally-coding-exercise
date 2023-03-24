@@ -14,14 +14,31 @@ class AdminTransactionView(viewsets.ModelViewSet):
     queryset = Transaction.objects.all()
     def post(request):
         try:
-            id = request.Get['id']
-            date = request.Get['date']
-            transaction_type = request.Get['transaction_type']
-            note = request.Get['note']
-            amount = request.Get['amount']
-            account_id = request.Get['account_id']
+            id = request.GET['id']
+            date = request.GET['date']
+            transaction_type = request.GET['transaction_type']
+            note = request.GET['note']
+            amount = request.GET['amount']
+            account_id = request.GET['account_id']
+            new_entry = Transaction(
+                id=id,
+                date=date, 
+                transaction_type=transaction_type, 
+                note=note,
+                amount=amount,
+                account_id=account_id,
+                )
+            new_entry.save()
+            # Modify account in question
+            net_change = int(amount)
+            if transaction_type: # If Debit, make net_change negative
+                net_change = -net_change
+            account = Account.objects.get(account_id = id)
+            account.current_balance = account.current_balance + net_change
+            account.save()
+            return Response(status=status.HTTP_201_CREATED)
         except KeyError:
-            print(KeyError)
+            print('KeyError')
             return Response([], status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -37,7 +54,6 @@ class UserTransactionView:
             transactions = []
             for account in accounts:
                 transaction = Transaction.objects.filter(account_id = account.account_id)
-                print(transaction)
                 serializer = TransactionSerializers(transaction, many=True)
                 if serializer.data:
                     transactions.append(serializer.data)
